@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - testV2-network
+
+  # backend:
+  #   build: ./backend
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     - mongo
+  #   networks:
+  #     - testV2-network
+
+  backend:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+    environment:
+      - MONGO_URI=mongodb+srv://itayrot2584:itayrot2584@users.ra7dxz2.mongodb.net/ShiftsDb?retryWrites=true&w=majority&appName=users
+    networks:
+      - testV2-network
+
+  mongo:
+    image: mongo:5
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - testV2-network
+
+volumes:
+  mongo-data:
+
+
+networks:
+  testV2-network:
+    driver: bridge
